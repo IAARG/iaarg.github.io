@@ -1,37 +1,370 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IAARG - Assistente de Vendas IA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body>
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="login-header">
+                <i class="fas fa-brain fa-3x"></i>
+                <h2>IAARG - Assistente de Vendas</h2>
+                <p>Acesso do Consultor</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">
+                        <i class="fas fa-envelope"></i> E-mail Corporativo
+                    </label>
+                    <input type="email" id="loginEmail" required placeholder="seu.email@empresa.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <input type="password" id="loginPassword" required placeholder="Sua senha">
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Acessar Dashboard
+                </button>
+            </form>
+            <p class="demo-notice">Demo: Use qualquer e-mail e senha para teste</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Principal -->
+    <div id="dashboard" class="dashboard" style="display: none;">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-brain fa-2x"></i>
+                    <h1>IAARG - Dashboard</h1>
+                </div>
+                <div class="user-info">
+                    <span id="userName">Consultor</span>
+                    <button id="logoutBtn" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <div class="container">
+                <div class="welcome-section">
+                    <h2>Bem-vindo ao Assistente de Vendas IA</h2>
+                    <p>Sistema de suporte em tempo real para consultores</p>
+                </div>
+                
+                <!-- Área de conteúdo será adicionada nas próximas fases -->
+                <div class="content-placeholder">
+                    <i class="fas fa-robot fa-5x"></i>
+                    <h3>Sistema em Desenvolvimento</h3>
+                    <p>Funcionalidades de reconhecimento de voz e IA serão adicionadas em breve</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sistema de Autenticação
+        class AuthSystem {
+            constructor() {
+                this.checkAuth();
+                this.setupEventListeners();
+            }
+
+            checkAuth() {
+                const isLoggedIn = localStorage.getItem('iaarg_loggedIn') === 'true';
+                if (isLoggedIn) {
+                    this.showDashboard();
+                    this.updateUserInfo();
+                } else {
+                    this.showLogin();
+                }
+            }
+
+            showLogin() {
+                document.getElementById('loginModal').style.display = 'flex';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+
+            showDashboard() {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            }
+
+            login(email) {
+                localStorage.setItem('iaarg_loggedIn', 'true');
+                localStorage.setItem('iaarg_userEmail', email);
+                localStorage.setItem('iaarg_userName', email.split('@')[0]);
+                
+                this.showDashboard();
+                this.updateUserInfo();
+                
+                console.log('Usuário logado:', email);
+            }
+
+            logout() {
+                localStorage.removeItem('iaarg_loggedIn');
+                localStorage.removeItem('iaarg_userEmail');
+                localStorage.removeItem('iaarg_userName');
+                
+                this.showLogin();
+                console.log('Usuário deslogado');
+            }
+
+            updateUserInfo() {
+                const userName = localStorage.getItem('iaarg_userName') || 'Consultor';
+                const userEmail = localStorage.getItem('iaarg_userEmail') || '';
+                
+                document.getElementById('userName').textContent = `${userName} (${userEmail})`;
+            }
+
+            setupEventListeners() {
+                // Login Form
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail').value;
+                    if (email) {
+                        this.login(email);
+                    }
+                });
+
+                // Logout
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.logout();
+                });
+
+                // Fechar modal clicando fora
+                document.getElementById('loginModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('loginModal')) {
+                        this.showLogin();
+                    }
+                });
+            }
+        }
+
+        // Inicializar sistema quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            new AuthSystem();
+        });
+    </script>
+
     <style>
-        /* CSS básico será adicionado aqui */
+        /* ESTILOS DA FASE 2 */
         :root {
             --primary: #1a2980;
             --secondary: #26d0ce;
             --accent: #ff2070;
+            --success: #28a745;
             --light: #f8f9fa;
             --dark: #212529;
+            --gray: #6c757d;
         }
-        
-        body {
+
+        * {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f7fa;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modal de Login */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-header i {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .login-header h2 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        .demo-notice {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-logout {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #e01a5e;
+        }
+
+        .dashboard-main {
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .content-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .content-placeholder i {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .content-placeholder h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
         }
     </style>
-</head>
-<body>
-    <div id="app">
-        <!-- Sistema será carregado aqui -->
-        <h1>IAARG - Assistente de Vendas</h1>
-        <p>Sistema em reconstrução...</p>
-    </div>
-
-    <script>
-        // JavaScript será adicionado aqui
-        console.log('IAARG Sales Assistant - Em desenvolvimento');
-    </script>
 </body>
 </html>
