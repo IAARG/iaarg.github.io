@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IAARG - Assistente de Vendas Inteligente</title>
+    <title>IAARG.COM.BR - Assistente de Vendas Inteligente</title>
     <style>
         * {
             margin: 0;
@@ -100,6 +100,10 @@
             background: linear-gradient(135deg, #27ae60, #229954);
         }
 
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
         .transcription-container {
             grid-column: span 2;
             background: #2c3e50;
@@ -158,8 +162,27 @@
             color: white;
             border-left: 4px solid #e67e22;
             margin: 10px 0;
-            padding: 10px;
+            padding: 15px;
             border-radius: 8px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .objection-detected {
+            background: #e74c3c;
+            color: white;
+            border-left: 4px solid #c0392b;
+            animation: highlight 1s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes highlight {
+            0% { background: #fff; }
+            50% { background: #e74c3c; }
+            100% { background: #e74c3c; }
         }
 
         @keyframes fadeIn {
@@ -177,6 +200,36 @@
             flex: 1;
             padding: 10px;
             font-size: 0.9em;
+        }
+
+        .argument-categories {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 5px 10px;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #bdc3c7;
         }
 
         @media (max-width: 768px) {
@@ -198,8 +251,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>IAARG - Dashboard</h1>
-            <div class="status">Sistema Pronto</div>
+            <h1>IAARG.COM.BR - Assistente Inteligente</h1>
+            <div class="status">Sistema Pronto - Fase 1 Ativa</div>
         </div>
 
         <div class="dashboard">
@@ -210,16 +263,32 @@
                 <button class="btn" id="startListening">Iniciar Escuta</button>
                 <button class="btn btn-danger" id="stopListening" disabled>Parar Escuta</button>
                 <div id="audioStatus" style="margin-top: 10px; font-size: 0.9em; color: #666;"></div>
+                
+                <div class="stats">
+                    <span>📊 Objeções: <span id="objectionCount">0</span></span>
+                    <span>💡 Sugestões: <span id="suggestionCount">0</span></span>
+                </div>
             </div>
 
             <!-- Configurações IA -->
             <div class="card">
-                <h3>🤖 Configurações IA</h3>
-                <p>Modo Persuasivo Ativo</p>
+                <h3>🤖 IA Persuasiva - Fase 1</h3>
+                <p>Modo Inteligente Ativo</p>
                 <button class="btn btn-success" id="toggleAI">Ativar IA</button>
+                
+                <div class="argument-categories">
+                    <button class="category-btn active" data-category="all">Todas</button>
+                    <button class="category-btn" data-category="preco">Preço</button>
+                    <button class="category-btn" data-category="necessidade">Necessidade</button>
+                    <button class="category-btn" data-category="urgência">Urgência</button>
+                </div>
+
                 <div class="ai-suggestion" id="aiSuggestion" style="display: none;">
                     <strong>💡 Sugestão IA:</strong> 
                     <span id="suggestionText">Use argumentos de valor agregado...</span>
+                    <div style="font-size: 0.8em; margin-top: 5px; opacity: 0.8;">
+                        Categoria: <span id="suggestionCategory">Geral</span>
+                    </div>
                 </div>
             </div>
 
@@ -239,7 +308,8 @@
                 
                 <div class="transcription-box" id="transcriptionBox">
                     <div style="text-align: center; color: #95a5a6; padding: 20px;">
-                        Aguardando início da conversa...
+                        Aguardando início da conversa...<br>
+                        <small>O sistema detectará automaticamente objeções e sugerirá argumentos</small>
                     </div>
                 </div>
                 
@@ -256,6 +326,59 @@
     </div>
 
     <script>
+        // ====== FASE 1: SISTEMA INTELIGENTE DE ARGUMENTAÇÃO ======
+
+        // Banco de argumentos categorizados
+        const argumentDatabase = {
+            preco: [
+                "Este investimento se paga em 3 meses com o aumento de 40% na produtividade",
+                "Oferecemos planos flexíveis a partir de R$ 297/mês - menos de 1 real por dia",
+                "Comparado com soluções similares, entregamos 30% mais valor pelo mesmo preço",
+                "Temos garantia de 30 dias: se não gerar resultado, devolvemos 100%",
+                "O custo de não implementar é 5x maior em oportunidades perdidas",
+                "Financiamento em 12x sem juros para facilitar o investimento",
+                "Economize 20 horas/mês em tarefas manuais - isso vale R$ X por mês"
+            ],
+            
+            necessidade: [
+                "82% dos seus concorrentes já usam soluções similares para ganhar vantagem",
+                "Isso resolve especificamente a dor [OBJEÇÃO] que você mencionou",
+                "Clientes similares aumentaram vendas em 35% após implementação",
+                "Previne problemas que custariam 5x mais para corrigir depois",
+                "Não é sobre ter, é sobre não ficar para trás no mercado",
+                "Solução escalável: cresce conforme seu negócio cresce",
+                "Integra com suas ferramentas atuais sem custo adicional"
+            ],
+            
+            urgencia: [
+                "Promoção especial válida apenas até [DATA] - 25% de desconto",
+                "Vagas limitadas para implantação prioritária este mês",
+                "Preços sobem 15% no próximo trimestre devido a novas funcionalidades",
+                "Implementação antes do [EVENTO] garante máximo impacto",
+                "Últimas 3 vagas para consultoria gratuita de implantação",
+                "Taxa de implementação isenta para contratos fechados esta semana",
+                "Acesso antecipado às novas funcionalidades do próximo trimestre"
+            ],
+            
+            confianca: [
+                "Mais de 500 clientes satisfeitos em todo o Brasil",
+                "Case de sucesso: Empresa X aumentou ROI em 300% em 6 meses",
+                "Suporte 24/7 com especialistas do seu setor",
+                "Certificação ISO 9001 e premiação de melhor atendimento",
+                "Implementação garantida em 7 dias ou seu dinheiro de volta",
+                "Equipe com 10+ anos de experiência no seu segmento",
+                "Depoimentos em vídeo de clientes disponíveis para contato"
+            ]
+        };
+
+        // Palavras-chave para detecção de objeções
+        const objectionKeywords = {
+            preco: ['caro', 'custando', 'preço', 'valor', 'dinheiro', 'investimento', 'pagando', 'caríssimo'],
+            necessidade: ['preciso', 'necessidade', 'agora não', 'depois', 'talvez', 'pensando', 'avaliando', 'não preciso'],
+            urgencia: ['depois', 'amanhã', 'mês que vem', 'sem pressa', 'calma', 'pensar', 'analisar'],
+            confianca: ['confiar', 'seguro', 'garantia', 'experiência', 'novo', 'conheço', 'confiança']
+        };
+
         // Variáveis globais
         let recognition = null;
         let isListening = false;
@@ -263,6 +386,9 @@
         let conversation = [];
         let mediaRecorder = null;
         let audioChunks = [];
+        let objectionCount = 0;
+        let suggestionCount = 0;
+        let currentCategory = 'all';
 
         // Elementos DOM
         const startBtn = document.getElementById('startListening');
@@ -271,13 +397,95 @@
         const toggleAI = document.getElementById('toggleAI');
         const aiSuggestion = document.getElementById('aiSuggestion');
         const suggestionText = document.getElementById('suggestionText');
+        const suggestionCategory = document.getElementById('suggestionCategory');
         const transcriptionBox = document.getElementById('transcriptionBox');
         const exportPDF = document.getElementById('exportPDF');
         const exportAudio = document.getElementById('exportAudio');
         const clientLive = document.getElementById('clientLive');
         const sellerLive = document.getElementById('sellerLive');
+        const objectionCountEl = document.getElementById('objectionCount');
+        const suggestionCountEl = document.getElementById('suggestionCount');
+        const categoryBtns = document.querySelectorAll('.category-btn');
 
-        // Inicializar Web Speech API
+        // ====== DETECTOR INTELIGENTE DE OBJEÇÕES ======
+        function detectObjection(message) {
+            const messageLower = message.toLowerCase();
+            let detectedCategory = null;
+            let detectedKeywords = [];
+
+            // Verifica cada categoria de objeção
+            for (const [category, keywords] of Object.entries(objectionKeywords)) {
+                const foundKeywords = keywords.filter(keyword => 
+                    messageLower.includes(keyword.toLowerCase())
+                );
+                
+                if (foundKeywords.length > 0) {
+                    detectedCategory = category;
+                    detectedKeywords = foundKeywords;
+                    break;
+                }
+            }
+
+            return { category: detectedCategory, keywords: detectedKeywords };
+        }
+
+        // ====== GERADOR DE SUGESTÕES CONTEXTUAIS ======
+        function generateAISuggestion(clientMessage, objectionData) {
+            if (!isAIEnabled) return;
+
+            let suggestions = [];
+            let category = 'geral';
+
+            if (objectionData.category && argumentDatabase[objectionData.category]) {
+                // Sugestão específica para a objeção detectada
+                suggestions = argumentDatabase[objectionData.category];
+                category = objectionData.category;
+                objectionCount++;
+            } else {
+                // Sugestão geral baseada no contexto
+                const allSuggestions = Object.values(argumentDatabase).flat();
+                suggestions = allSuggestions;
+                category = 'geral';
+            }
+
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            
+            // Atualizar interface
+            suggestionText.textContent = randomSuggestion;
+            suggestionCategory.textContent = category;
+            aiSuggestion.style.display = 'block';
+            aiSuggestion.className = 'ai-suggestion';
+            
+            // Destaque especial para objeções detectadas
+            if (objectionData.category) {
+                aiSuggestion.classList.add('objection-detected');
+            }
+
+            suggestionCount++;
+            updateCounters();
+        }
+
+        // ====== ATUALIZAR CONTADORES ======
+        function updateCounters() {
+            objectionCountEl.textContent = objectionCount;
+            suggestionCountEl.textContent = suggestionCount;
+        }
+
+        // ====== FILTRAR POR CATEGORIA ======
+        function setupCategoryFilters() {
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    
+                    // Aqui implementaríamos o filtro de sugestões por categoria
+                    // (para Fase 2 - Histórico de sugestões)
+                });
+            });
+        }
+
+        // ====== FUNÇÕES EXISTENTES (ATUALIZADAS) ======
         function initializeSpeechRecognition() {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -291,7 +499,7 @@
                     isListening = true;
                     startBtn.disabled = true;
                     stopBtn.disabled = false;
-                    audioStatus.innerHTML = '🎤 <strong>Escutando...</strong>';
+                    audioStatus.innerHTML = '🎤 <strong>Escutando... Detecção Ativa</strong>';
                     audioStatus.style.color = '#27ae60';
                 };
 
@@ -309,8 +517,9 @@
                     }
 
                     if (finalTranscript) {
-                        addMessage(finalTranscript, 'client');
-                        generateAISuggestion(finalTranscript);
+                        const objectionData = detectObjection(finalTranscript);
+                        addMessage(finalTranscript, 'client', objectionData);
+                        generateAISuggestion(finalTranscript, objectionData);
                     }
                 };
 
@@ -322,7 +531,7 @@
 
                 recognition.onend = function() {
                     if (isListening) {
-                        recognition.start(); // Reiniciar se ainda estiver ativo
+                        recognition.start();
                     }
                 };
 
@@ -333,122 +542,94 @@
             }
         }
 
-        // Adicionar mensagem à transcrição
-        function addMessage(text, speaker) {
+        function addMessage(text, speaker, objectionData = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${speaker}`;
-            messageDiv.innerHTML = `<strong>${speaker === 'client' ? '👤 Cliente' : '👨‍💼 Vendedor'}:</strong> ${text}`;
             
+            let messageHTML = `<strong>${speaker === 'client' ? '👤 Cliente' : '👨‍💼 Vendedor'}:</strong> ${text}`;
+            
+            if (objectionData && objectionData.category) {
+                messageHTML += `<br><small style='opacity: 0.8;'>🎯 Objeção detectada: ${objectionData.category} (${objectionData.keywords.join(', ')})</small>`;
+            }
+            
+            messageDiv.innerHTML = messageHTML;
             transcriptionBox.appendChild(messageDiv);
             transcriptionBox.scrollTop = transcriptionBox.scrollHeight;
 
-            // Adicionar à conversa
             conversation.push({
                 speaker: speaker,
                 text: text,
-                timestamp: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleTimeString(),
+                objection: objectionData
             });
 
-            // Atualizar indicadores LIVE
             updateLiveIndicators(speaker);
         }
 
-        // Atualizar indicadores LIVE
         function updateLiveIndicators(speaker) {
             if (speaker === 'client') {
                 clientLive.style.display = 'inline-block';
-                setTimeout(() => {
-                    clientLive.style.display = 'none';
-                }, 3000);
+                setTimeout(() => { clientLive.style.display = 'none'; }, 3000);
             } else {
                 sellerLive.style.display = 'inline-block';
-                setTimeout(() => {
-                    sellerLive.style.display = 'none';
-                }, 3000);
+                setTimeout(() => { sellerLive.style.display = 'none'; }, 3000);
             }
         }
 
-        // Gerar sugestão da IA
-        function generateAISuggestion(clientMessage) {
-            if (!isAIEnabled) return;
+        // ====== RESTANTE DO CÓDIGO PERMANECE IGUAL ======
+        // (Funções de áudio, exportação, event listeners...)
 
-            const suggestions = [
-                "Destaque os benefícios exclusivos do produto para o perfil do cliente",
-                "Use exemplos concretos de como outros clientes se beneficiaram",
-                "Ofereça uma demonstração prática para engajar melhor",
-                "Aborde possíveis objeções antes que sejam levantadas",
-                "Crie urgência mencionando promoções ou prazos limitados",
-                "Conecte a solução com as necessidades específicas mencionadas",
-                "Use storytelling para tornar a solução mais memorável",
-                "Ofereça garantias para reduzir o risco percebido"
-            ];
-
-            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
-            suggestionText.textContent = randomSuggestion;
-            aiSuggestion.style.display = 'block';
-        }
-
-        // Iniciar gravação de áudio
         async function startAudioRecording() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
-
-                mediaRecorder.ondataavailable = (event) => {
-                    audioChunks.push(event.data);
-                };
-
+                mediaRecorder.ondataavailable = (event) => { audioChunks.push(event.data); };
                 mediaRecorder.start();
             } catch (error) {
                 console.error('Erro ao acessar microfone:', error);
             }
         }
 
-        // Parar gravação de áudio
         function stopAudioRecording() {
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
             }
         }
 
-        // Exportar PDF
         function exportToPDF() {
             if (conversation.length === 0) {
                 alert('Nenhuma conversa para exportar!');
                 return;
             }
-
-            let pdfContent = `Relatório de Venda - ${new Date().toLocaleDateString()}\n\n`;
-            
+            let pdfContent = `Relatório de Venda - ${new Date().toLocaleDateString()}\nObjeções Detectadas: ${objectionCount}\n\n`;
             conversation.forEach(msg => {
-                pdfContent += `[${msg.timestamp}] ${msg.speaker.toUpperCase()}: ${msg.text}\n`;
+                pdfContent += `[${msg.timestamp}] ${msg.speaker.toUpperCase()}: ${msg.text}`;
+                if (msg.objection && msg.objection.category) {
+                    pdfContent += ` [OBJEÇÃO: ${msg.objection.category}]`;
+                }
+                pdfContent += '\n';
             });
-
             const blob = new Blob([pdfContent], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `venda-${Date.now()}.txt`;
             a.click();
-            
-            alert('PDF exportado com sucesso!');
+            alert('Relatório exportado com sucesso!');
         }
 
-        // Exportar Áudio
         function exportToAudio() {
             if (audioChunks.length === 0) {
                 alert('Nenhum áudio para exportar!');
                 return;
             }
-
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
             const audioUrl = URL.createObjectURL(audioBlob);
             const a = document.createElement('a');
             a.href = audioUrl;
             a.download = `audio-${Date.now()}.wav`;
             a.click();
-            
             alert('Áudio exportado com sucesso!');
         }
 
@@ -463,7 +644,6 @@
             isListening = false;
             recognition.stop();
             stopAudioRecording();
-            
             startBtn.disabled = false;
             stopBtn.disabled = true;
             audioStatus.innerHTML = '⏹️ Escuta parada';
@@ -475,7 +655,6 @@
             toggleAI.textContent = isAIEnabled ? 'Desativar IA' : 'Ativar IA';
             toggleAI.classList.toggle('btn-success', isAIEnabled);
             toggleAI.classList.toggle('btn-danger', !isAIEnabled);
-            
             if (!isAIEnabled) {
                 aiSuggestion.style.display = 'none';
             }
@@ -493,7 +672,10 @@
         });
 
         // Inicialização
-        console.log('IAARG - Sistema carregado com sucesso!');
+        setupCategoryFilters();
+        console.log('IAARG - Fase 1: Sistema Inteligente carregado!');
+        console.log('📊 Argumentos carregados:', Object.keys(argumentDatabase).length, 'categorias');
+        console.log('🎯 Palavras-chave para detecção:', Object.keys(objectionKeywords).length, 'categorias');
     </script>
 </body>
 </html>
