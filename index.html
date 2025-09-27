@@ -3,47 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IAARG.COM.BR - Assistente de Vendas Inteligente</title>
+    <title>ARGUS AI - Seu Parceiro de Vendas Inteligente</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --info: #9b59b6;
-            --dark: #2c3e50;
-            --light: #ecf0f1;
-            
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-dark: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            --gradient-success: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            --neon-primary: #00f5d4;
+            --neon-secondary: #9d4edd;
+            --neon-accent: #ff006e;
+            --dark-bg: #0a0a0a;
+            --dark-card: #1a1a1a;
+            --dark-text: #ffffff;
+            --gradient-neon: linear-gradient(135deg, #00f5d4 0%, #9d4edd 100%);
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background: var(--gradient-primary);
+            background: var(--dark-bg);
+            color: var(--dark-text);
             min-height: 100vh;
-            padding: 0;
+            overflow-x: hidden;
         }
 
-        /* Header e Navegação */
+        /* Efeito de partículas de fundo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-primary);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Futurista */
         .main-header {
-            background: var(--gradient-dark);
-            color: white;
-            padding: 20px 30px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0, 245, 212, 0.2);
+            position: relative;
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .logo {
@@ -52,71 +89,181 @@
             gap: 15px;
         }
 
-        .logo h1 {
+        .logo-icon {
+            font-size: 2em;
+            background: var(--gradient-neon);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00f5d4; }
+            to { text-shadow: 0 0 20px #9d4edd, 0 0 30px #00f5d4; }
+        }
+
+        .logo-text {
             font-size: 1.8em;
             font-weight: 700;
+            background: linear-gradient(45deg, #00f5d4, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .nav-tabs {
             display: flex;
-            gap: 5px;
-            background: rgba(255,255,255,0.1);
+            gap: 10px;
+            background: rgba(255,255,255,0.05);
             padding: 5px;
             border-radius: 15px;
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 245, 212, 0.1);
         }
 
         .nav-tab {
-            padding: 10px 25px;
+            padding: 12px 25px;
             border: none;
             background: transparent;
-            color: white;
+            color: var(--dark-text);
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-neon);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-tab.active::before {
+            left: 0;
         }
 
         .nav-tab.active {
-            background: var(--secondary);
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            color: #000;
+            font-weight: 600;
         }
 
-        /* Conteúdo das Páginas */
-        .page {
-            display: none;
-            padding: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* Sistema de Status Automático */
+        .status-system {
+            background: var(--dark-card);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 245, 212, 0.2);
+            position: relative;
         }
 
-        .page.active {
-            display: block;
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        /* === PÁGINA 1: ASSISTENTE DE VENDAS === */
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--neon-primary);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .status-message {
+            font-size: 1.1em;
+            color: var(--neon-primary);
+        }
+
+        .ai-personality {
+            background: rgba(0, 245, 212, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid var(--neon-primary);
+            margin: 15px 0;
+        }
+
+        .ai-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-neon);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .ai-text {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            border: 1px solid rgba(0, 245, 212, 0.2);
+        }
+
+        /* Cards Modernos */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
-            margin-bottom: 30px;
+            margin: 30px 0;
         }
 
         .card {
-            background: white;
-            border-radius: 15px;
+            background: var(--dark-card);
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--secondary);
-            transition: transform 0.3s ease;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,245,212,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
         }
 
         .card:hover {
             transform: translateY(-5px);
+            border-color: rgba(0, 245, 212, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.1);
         }
 
         .card h3 {
-            color: var(--primary);
+            color: var(--neon-primary);
             margin-bottom: 15px;
             font-size: 1.3em;
             display: flex;
@@ -124,298 +271,292 @@
             gap: 10px;
         }
 
-        .btn {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin: 8px 0;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-danger { background: var(--gradient-warning); }
-        .btn-success { background: var(--gradient-success); }
-
-        .transcription-container {
-            grid-column: span 2;
-            background: var(--dark);
-            color: white;
+        /* Conversação Natural */
+        .conversation-flow {
+            background: var(--dark-card);
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .transcription-box {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 15px 0;
-            min-height: 200px;
-            max-height: 400px;
+        .conversation-messages {
+            max-height: 500px;
             overflow-y: auto;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
         }
 
         .message {
-            margin: 12px 0;
-            padding: 12px;
-            border-radius: 8px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .client { background: rgba(52, 152, 219, 0.15); margin-left: 20px; }
-        .seller { background: rgba(39, 174, 96, 0.15); margin-right: 20px; }
-
-        .ai-suggestion {
-            background: rgba(243, 156, 18, 0.15);
-            border-left: 4px solid var(--warning);
-            margin: 12px 0;
+            margin: 15px 0;
             padding: 15px;
-            border-radius: 8px;
-            animation: slideIn 0.5s ease;
+            border-radius: 15px;
+            animation: messageSlide 0.3s ease;
+            max-width: 80%;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+        .message.client {
+            background: rgba(157, 78, 221, 0.2);
+            border-left: 3px solid var(--neon-secondary);
+            margin-right: auto;
         }
 
-        /* === PÁGINA 2: ANALYTICS === */
-        .analytics-grid {
+        .message.seller {
+            background: rgba(0, 245, 212, 0.2);
+            border-left: 3px solid var(--neon-primary);
+            margin-left: auto;
+        }
+
+        .message.argus {
+            background: rgba(255, 0, 110, 0.2);
+            border-left: 3px solid var(--neon-accent);
+            margin: 15px auto;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .suggestion-bubble {
+            background: rgba(0, 245, 212, 0.1);
+            border: 1px solid var(--neon-primary);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 10px 0;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(0, 245, 212, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 245, 212, 0.6); }
+            100% { box-shadow: 0 0 10px rgba(0, 245, 212, 0.3); }
+        }
+
+        /* Seção Comercial */
+        .pricing-section {
+            background: var(--gradient-dark);
+            padding: 50px 20px;
+            margin: 50px 0;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .pricing-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 30px;
+            margin-top: 40px;
         }
 
-        .metric-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        .pricing-card {
+            background: var(--dark-card);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .metric-value {
-            font-size: 2.2em;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 10px 0;
+        .pricing-card.featured {
+            border-color: var(--neon-primary);
+            transform: scale(1.05);
         }
 
-        .charts-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .chart-box {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-
-        .history-list {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-
-        .history-header {
-            background: var(--gradient-dark);
-            color: white;
-            padding: 20px;
+        .pricing-card:hover {
+            border-color: var(--neon-primary);
         }
 
         @media (max-width: 768px) {
-            .dashboard,
-            .analytics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .transcription-container,
-            .charts-container {
-                grid-column: span 1;
-            }
-            
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .main-header {
+            .header-content {
                 flex-direction: column;
-                gap: 15px;
-                text-align: center;
+                gap: 20px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Cabeçalho com Navegação -->
+    <!-- Partículas de fundo -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
     <header class="main-header">
-        <div class="logo">
-            <i class="fas fa-robot"></i>
-            <h1>IAARG.COM.BR</h1>
-        </div>
-        <div class="nav-tabs">
-            <button class="nav-tab active" data-page="assistant">
-                <i class="fas fa-microphone"></i> Assistente de Vendas
-            </button>
-            <button class="nav-tab" data-page="analytics">
-                <i class="fas fa-chart-line"></i> Analytics & CRM
-            </button>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🤖</div>
+                <div class="logo-text">ARGUS AI</div>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-page="assistant">🎯 Vendas ao Vivo</button>
+                <button class="nav-tab" data-page="analytics">📊 Performance</button>
+                <button class="nav-tab" data-page="pricing">💳 Licenças</button>
+            </div>
         </div>
     </header>
 
-    <!-- PÁGINA 1: ASSISTENTE DE VENDAS -->
-    <div class="page active" id="assistant-page">
-        <div class="dashboard">
-            <!-- Captura de Áudio -->
-            <div class="card">
-                <h3>🎤 Captura de Áudio</h3>
-                <p>Inicie a escuta da conversa</p>
-                <button class="btn" id="startListening">Iniciar Escuta</button>
-                <button class="btn btn-danger" id="stopListening" disabled>Parar Escuta</button>
-                <div id="audioStatus" style="margin-top: 10px; font-size: 0.9em; color: #666;"></div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5em; font-weight: bold;" id="objectionCount">0</div>
-                        <div style="font-size: 0.8em; color: #666;">Objeções</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5em; font-weight: bold;" id="suggestionCount">0</div>
-                        <div style="font-size: 0.8em; color: #666;">Sugestões</div>
+    <div class="container">
+        <!-- Sistema de Status Automático -->
+        <div class="status-system">
+            <div class="status-indicator">
+                <div class="pulse-dot"></div>
+                <div class="status-message" id="statusMessage">
+                    🎯 ARGUS está ouvindo ativamente a conversa...
+                </div>
+            </div>
+            <div class="ai-personality">
+                <div class="ai-message">
+                    <div class="ai-avatar">AI</div>
+                    <div class="ai-text">
+                        <strong>ARGUS:</strong> Estou analisando o tom de voz e conteúdo da conversa. 
+                        Quando detectar uma objeção, vou sugerir argumentos naturalmente.
                     </div>
                 </div>
             </div>
-
-            <!-- Configurações IA -->
-            <div class="card">
-                <h3>🤖 IA Persuasiva</h3>
-                <p>Modo Inteligente Ativo</p>
-                <button class="btn btn-success" id="toggleAI">Ativar IA</button>
-                
-                <div style="display: flex; gap: 5px; margin: 15px 0; flex-wrap: wrap;">
-                    <button class="category-btn" data-category="all" style="padding: 8px 15px; background: #ecf0f1; border: none; border-radius: 15px; font-size: 0.8em;">🎯 Todas</button>
-                    <button class="category-btn" data-category="preco" style="padding: 8px 15px; background: #ecf0f1; border: none; border-radius: 15px; font-size: 0.8em;">💰 Preço</button>
-                    <button class="category-btn" data-category="necessidade" style="padding: 8px 15px; background: #ecf0f1; border: none; border-radius: 15px; font-size: 0.8em;">📊 Necessidade</button>
-                </div>
-
-                <div class="ai-suggestion" id="aiSuggestion" style="display: none;">
-                    <strong>💡 Sugestão IA:</strong> 
-                    <span id="suggestionText">Use argumentos de valor agregado...</span>
-                </div>
-            </div>
-
-            <!-- Exportar Dados -->
-            <div class="card">
-                <h3>📊 Exportar Dados</h3>
-                <p>Salve a reunião</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button class="btn" id="exportPDF">📄 PDF</button>
-                    <button class="btn" id="exportAudio">🎵 Áudio</button>
-                </div>
-            </div>
-
-            <!-- Transcrição em Tempo Real -->
-            <div class="transcription-container">
-                <h3>📝 Transcrição em Tempo Real</h3>
-                
-                <div class="transcription-box" id="transcriptionBox">
-                    <div style="text-align: center; color: #95a5a6; padding: 40px;">
-                        Aguardando início da conversa...
-                    </div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-                    <div><strong>Cliente</strong> <span style="background: #e74c3c; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8em;">LIVE</span></div>
-                    <div><strong>Vendedor</strong> <span style="background: #e74c3c; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8em;">LIVE</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PÁGINA 2: ANALYTICS & CRM -->
-    <div class="page" id="analytics-page">
-        <div class="analytics-grid">
-            <div class="metric-card">
-                <h3>📈 Total de Conversas</h3>
-                <div class="metric-value">47</div>
-                <div style="color: #27ae60; font-weight: bold;">↑ 12% esta semana</div>
-            </div>
-            
-            <div class="metric-card">
-                <h3>✅ Taxa de Sucesso</h3>
-                <div class="metric-value">68%</div>
-                <div style="color: #27ae60; font-weight: bold;">↑ 8% este mês</div>
-            </div>
-            
-            <div class="metric-card">
-                <h3>⏱️ Duração Média</h3>
-                <div class="metric-value">12min</div>
-                <div style="color: #e74c3c; font-weight: bold;">↓ 2min vs anterior</div>
-            </div>
-            
-            <div class="metric-card">
-                <h3>🎯 Objeções Detectadas</h3>
-                <div class="metric-value">33</div>
-                <div style="color: #f39c12; font-weight: bold;">↗ 15% mais eficiência</div>
-            </div>
         </div>
 
-        <div class="charts-container">
-            <div class="chart-box">
-                <h3>📊 Performance por Tipo de Objeção</h3>
-                <canvas id="objectionChart" height="250"></canvas>
-            </div>
-            
-            <div class="chart-box">
-                <h3>😊 Análise de Sentimentos</h3>
-                <canvas id="sentimentChart" height="250"></canvas>
-            </div>
-        </div>
-
-        <div class="history-list">
-            <div class="history-header">
-                <h3>📋 Histórico Recente de Vendas</h3>
-            </div>
-            <div style="padding: 20px;">
-                <div style="display: grid; gap: 15px;">
-                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-weight: bold;">João Silva - 15/01/2024 14:30</div>
-                        <div style="color: #666; margin: 5px 0;">Cliente interessado na solução Enterprise, 2 objeções superadas</div>
-                        <div style="display: flex; gap: 15px; font-size: 0.9em;">
-                            <span>✅ Fechado</span>
-                            <span>😊 Positivo</span>
-                            <span>⏱️ 15min</span>
+        <!-- Página Principal: Vendas ao Vivo -->
+        <div class="page active" id="assistant-page">
+            <div class="dashboard">
+                <div class="card">
+                    <h3>👥 Contexto da Reunião</h3>
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Cliente:</span>
+                            <strong id="clientName">Aguardando identificação...</strong>
                         </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Duração:</span>
+                            <strong id="meetingDuration">00:00</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Status:</span>
+                            <strong style="color: var(--neon-primary);">Conversa Ativa</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>💡 Insights em Tempo Real</h3>
+                    <div id="liveInsights">
+                        <div style="margin: 15px 0;">
+                            <div style="color: var(--neon-primary); margin-bottom: 5px;">🎯 Tom da Conversa</div>
+                            <div>Neutro - Aguardando pontos decisivos</div>
+                        </div>
+                        <div style="margin: 15px 0;">
+                            <div style="color: var(--neon-primary); margin-bottom: 5px;">📊 Probabilidade de Fechamento</div>
+                            <div>45% - Em progresso</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🚀 Sugestões do ARGUS</h3>
+                    <div class="suggestion-bubble" id="currentSuggestion">
+                        <strong>💡 Sugestão Atual:</strong><br>
+                        Inicie a conversa explorando as necessidades principais do cliente. 
+                        Ouça ativamente antes de apresentar soluções.
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center;">
+                            <div>
+                                <div style="font-size: 1.5em; font-weight: bold;">3</div>
+                                <div style="font-size: 0.8em;">Objeções Detectadas</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5em; font-weight: bold;">7</div>
+                                <div style="font-size: 0.8em;">Sugestões Fornecidas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversação Natural -->
+            <div class="conversation-flow">
+                <h3>💬 Conversa em Andamento</h3>
+                <div class="conversation-messages" id="conversationMessages">
+                    <div class="message argus">
+                        🎯 ARGUS entrou na conversa. Estou aqui para ajudar como seu parceiro de vendas!
+                    </div>
+                    <div class="message client">
+                        <strong>Cliente:</strong> Gostei da demonstração, mas preciso pensar sobre o investimento...
+                    </div>
+                    <div class="message seller">
+                        <strong>Vendedor:</strong> Entendo perfeitamente. Posso esclarecer alguma dúvida específica?
+                    </div>
+                    <div class="message argus">
+                        💡 <strong>ARGUS sugere:</strong> Destaque o ROI de 3 meses e ofereça estudo de caso similar
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página de Licenças -->
+        <div class="page" id="pricing-page">
+            <div class="pricing-section">
+                <h2 style="font-size: 2.5em; margin-bottom: 20px;">💳 Licenças ARGUS AI</h2>
+                <p style="font-size: 1.2em; opacity: 0.9;">Escolha o plano ideal para sua equipe de vendas</p>
+                
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>🚀 Starter</h3>
+                        <div style="font-size: 2.5em; font-weight: bold; margin: 20px 0;">
+                            R$ 297<span style="font-size: 0.5em;">/mês</span>
+                        </div>
+                        <ul style="text-align: left; margin: 20px 0;">
+                            <li>✔️ 1 usuário</li>
+                            <li>✔️ Análise básica de conversas</li>
+                            <li>✔️ 100 horas/mês de processamento</li>
+                            <li>❌ Suporte por email</li>
+                        </ul>
+                        <button class="nav-tab active" style="width: 100%;">Experimentar Grátis</button>
                     </div>
                     
-                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-weight: bold;">Maria Santos - 15/01/2024 11:15</div>
-                        <div style="color: #666; margin: 5px 0;">Necessita de mais informações técnicas, agendar follow-up</div>
-                        <div style="display: flex; gap: 15px; font-size: 0.9em;">
-                            <span>⏳ Em andamento</span>
-                            <span>😐 Neutro</span>
-                            <span>⏱️ 8min</span>
+                    <div class="pricing-card featured">
+                        <div style="background: var(--neon-primary); color: black; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 15px;">
+                            MAIS POPULAR
                         </div>
+                        <h3>💼 Professional</h3>
+                        <div style="font-size: 2.5em; font-weight: bold; margin: 20px 0;">
+                            R$ 997<span style="font-size: 0.5em;">/mês</span>
+                        </div>
+                        <ul style="text-align: left; margin: 20px 0;">
+                            <li>✔️ 5 usuários</li>
+                            <li>✔️ Análise avançada com IA</li>
+                            <li>✔️ Processamento ilimitado</li>
+                            <li>✔️ Suporte prioritário</li>
+                            <li>✔️ Relatórios personalizados</li>
+                        </ul>
+                        <button class="nav-tab active" style="width: 100%; background: var(--neon-primary); color: black;">Contratar Agora</button>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3>🏢 Enterprise</h3>
+                        <div style="font-size: 2.5em; font-weight: bold; margin: 20px 0;">
+                            Personalizado
+                        </div>
+                        <ul style="text-align: left; margin: 20px 0;">
+                            <li>✔️ Usuários ilimitados</li>
+                            <li>✔️ IA customizada para seu negócio</li>
+                            <li>✔️ API integração completa</li>
+                            <li>✔️ Suporte dedicado 24/7</li>
+                            <li>✔️ On-premise disponível</li>
+                        </ul>
+                        <button class="nav-tab active" style="width: 100%;">Falar com Vendas</button>
                     </div>
                 </div>
             </div>
@@ -423,76 +564,150 @@
     </div>
 
     <script>
-        // ====== SISTEMA DE NAVEGAÇÃO ======
+        // ====== SISTEMA ARGUS AI - VERSÃO COMERCIAL ======
+        
+        // Partículas de fundo
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        // Sistema de detecção automática
+        let isMonitoring = true;
+        let conversationHistory = [];
+        
+        function startAutomaticMonitoring() {
+            console.log('🎯 ARGUS AI - Monitoramento automático ativado');
+            
+            // Simular detecção de conversa
+            setInterval(() => {
+                if (isMonitoring) {
+                    simulateConversation();
+                    updateStatus();
+                }
+            }, 10000);
+        }
+
+        function simulateConversation() {
+            const messages = [
+                "O preço está acima do nosso orçamento inicial...",
+                "Precisamos validar com a diretoria antes",
+                "Como isso se compara com a concorrência?",
+                "Temos urgência na implementação?",
+                "Quais são as garantias do projeto?"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            addMessage(randomMessage, 'client');
+            
+            // ARGUS analisa e sugere
+            setTimeout(() => {
+                provideSuggestion(randomMessage);
+            }, 2000);
+        }
+
+        function addMessage(text, speaker) {
+            const messagesContainer = document.getElementById('conversationMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${speaker}`;
+            messageDiv.innerHTML = `<strong>${speaker === 'client' ? '👤 Cliente' : '👨‍💼 Vendedor'}:</strong> ${text}`;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Adicionar ao histórico
+            conversationHistory.push({
+                speaker: speaker,
+                text: text,
+                timestamp: new Date().toLocaleTimeString()
+            });
+        }
+
+        function provideSuggestion(clientMessage) {
+            const suggestions = {
+                preco: "Destaque o ROI de 3 meses e ofereça planos flexíveis de pagamento",
+                necessidade: "Conecte a solução com os objetivos estratégicos do cliente",
+                urgencia: "Crie urgência mostrando oportunidades limitadas ou prazos",
+                confianca: "Compartilhe cases de sucesso e depoimentos de clientes similares"
+            };
+            
+            // Análise simples da mensagem
+            let suggestionCategory = 'geral';
+            if (clientMessage.toLowerCase().includes('preço') || clientMessage.includes('orçamento')) {
+                suggestionCategory = 'preco';
+            } else if (clientMessage.includes('validar') || clientMessage.includes('diretoria')) {
+                suggestionCategory = 'confianca';
+            }
+            
+            const suggestion = suggestions[suggestionCategory] || 
+                "Ouça ativamente e explore as necessidades não ditas do cliente";
+            
+            // Adicionar sugestão do ARGUS
+            const messagesContainer = document.getElementById('conversationMessages');
+            const argusMessage = document.createElement('div');
+            argusMessage.className = 'message argus';
+            argusMessage.innerHTML = `💡 <strong>ARGUS sugere:</strong> ${suggestion}`;
+            
+            messagesContainer.appendChild(argusMessage);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Atualizar sugestão atual
+            document.getElementById('currentSuggestion').innerHTML = 
+                `<strong>💡 Sugestão Atual:</strong><br>${suggestion}`;
+        }
+
+        function updateStatus() {
+            const statusMessages = [
+                "🎯 Analisando padrões de conversa...",
+                "💡 Identificando oportunidades de valor...",
+                "📊 Monitorando tom emocional...",
+                "🚀 Otimizando argumentos em tempo real..."
+            ];
+            
+            const randomStatus = statusMessages[Math.floor(Math.random() * statusMessages.length)];
+            document.getElementById('statusMessage').textContent = randomStatus;
+        }
+
+        // Navegação
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', function() {
-                // Ativar tab clicada
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
                 
-                // Mostrar página correspondente
                 const pageId = this.dataset.page + '-page';
                 document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                 document.getElementById(pageId).classList.add('active');
             });
         });
 
-        // ====== GRÁFICOS DO ANALYTICS ======
-        function initializeCharts() {
-            // Gráfico de objeções
-            const objectionCtx = document.getElementById('objectionChart').getContext('2d');
-            new Chart(objectionCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Preço', 'Necessidade', 'Urgência', 'Confiança'],
-                    datasets: [{
-                        label: 'Objeções',
-                        data: [15, 8, 6, 4],
-                        backgroundColor: ['#e74c3c', '#3498db', '#f39c12', '#9b59b6']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            // Gráfico de sentimentos
-            const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
-            new Chart(sentimentCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Positivo', 'Neutro', 'Negativo'],
-                    datasets: [{
-                        data: [25, 15, 7],
-                        backgroundColor: ['#27ae60', '#f39c12', '#e74c3c']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    cutout: '60%'
-                }
-            });
-        }
-
-        // ====== CÓDIGO DO ASSISTENTE DE VENDAS ======
-        // (Todo o JavaScript das Fases 1-2 aqui)
-        // ... [Todo o código de funcionalidade do assistente]
-
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            initializeCharts();
-            // Inicializar assistente de vendas
-            initializeSalesAssistant();
+            createParticles();
+            startAutomaticMonitoring();
+            
+            // Iniciar temporizador da reunião
+            startMeetingTimer();
         });
 
-        function initializeSalesAssistant() {
-            // Aqui viria todo o código do assistente de vendas
-            console.log('Assistente de Vendas inicializado!');
+        function startMeetingTimer() {
+            let seconds = 0;
+            setInterval(() => {
+                seconds++;
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                document.getElementById('meetingDuration').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }, 1000);
         }
 
-        console.log('🚀 IAARG Sistema Integrado Carregado!');
+        console.log('🚀 ARGUS AI - Sistema comercial carregado!');
     </script>
 </body>
 </html>
