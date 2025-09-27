@@ -3,572 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IAARG.COM.BR - Assistente de Vendas Inteligente</title>
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <title>IAARG.COM.BR - CRM & Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            /* Cores Corporativas IAARG */
             --primary: #2c3e50;
             --secondary: #3498db;
             --accent: #e74c3c;
             --success: #27ae60;
             --warning: #f39c12;
+            --info: #9b59b6;
             --dark: #2c3e50;
             --light: #ecf0f1;
             
-            /* Gradientes Premium */
             --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --gradient-dark: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             --gradient-success: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-            --gradient-warning: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-            
-            /* Sombras Premium */
-            --shadow-sm: 0 2px 10px rgba(0,0,0,0.1);
-            --shadow-md: 0 10px 30px rgba(0,0,0,0.15);
-            --shadow-lg: 0 20px 50px rgba(0,0,0,0.2);
-            --shadow-glow: 0 0 30px rgba(52, 152, 219, 0.3);
+            --gradient-analytics: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
         body {
             background: var(--gradient-primary);
             min-height: 100vh;
             padding: 20px;
-            background-attachment: fixed;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 20px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .header {
             background: var(--gradient-dark);
             color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><circle cx="50" cy="50" r="2" fill="white"/></svg>');
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100px, -100px); }
-        }
-
-        .header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            font-weight: 700;
-            position: relative;
-            background: linear-gradient(45deg, #fff, #ecf0f1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-bottom: 15px;
-            font-weight: 300;
-        }
-
-        .status {
-            background: var(--gradient-success);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            display: inline-block;
-            font-size: 1em;
-            font-weight: 600;
-            box-shadow: var(--shadow-sm);
-            position: relative;
-            z-index: 1;
-        }
-
-        .version-badge {
-            background: var(--gradient-warning);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            margin-left: 10px;
-            animation: glow 2s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 0 5px rgba(243, 156, 18, 0.5); }
-            to { box-shadow: 0 0 20px rgba(243, 156, 18, 0.8); }
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            padding: 40px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
             padding: 30px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .card h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.4em;
-            font-weight: 600;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-        }
-
-        .card h3::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--secondary);
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .btn {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin: 8px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn-danger {
-            background: var(--gradient-warning);
-        }
-
-        .btn-success {
-            background: var(--gradient-success);
-        }
-
-        .btn-warning {
-            background: var(--gradient-warning);
-        }
-
-        .transcription-container {
-            grid-column: span 2;
-            background: var(--dark);
-            color: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .transcription-box {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-            min-height: 200px;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .live-badge {
-            background: var(--accent);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin-left: 10px;
-            animation: pulse 1.5s infinite;
-            font-weight: 600;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .message {
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 10px;
-            animation: slideInUp 0.4s ease;
-            position: relative;
-            border-left: 4px solid transparent;
-        }
-
-        @keyframes slideInUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .client {
-            background: rgba(52, 152, 219, 0.1);
-            border-left-color: var(--secondary);
-            margin-left: 30px;
-        }
-
-        .seller {
-            background: rgba(39, 174, 96, 0.1);
-            border-left-color: var(--success);
-            margin-right: 30px;
-        }
-
-        .ai-suggestion {
-            background: rgba(243, 156, 18, 0.1);
-            border-left: 4px solid var(--warning);
-            margin: 15px 0;
-            padding: 20px;
-            border-radius: 12px;
-            animation: slideInLeft 0.5s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .objection-detected {
-            background: rgba(231, 76, 60, 0.1);
-            border-left-color: var(--accent);
-            animation: highlight 1s ease;
-        }
-
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes highlight {
-            0% { background: rgba(231, 76, 60, 0.1); }
-            50% { background: rgba(231, 76, 60, 0.3); }
-            100% { background: rgba(231, 76, 60, 0.1); }
-        }
-
-        .export-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .export-btn {
-            padding: 12px;
-            font-size: 0.9em;
-            border-radius: 8px;
-        }
-
-        .argument-categories {
-            display: flex;
-            gap: 8px;
-            margin: 20px 0;
             flex-wrap: wrap;
         }
 
-        .category-btn {
-            padding: 8px 16px;
-            background: var(--light);
-            border: 2px solid transparent;
-            border-radius: 20px;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
+        .header-info h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #fff, #ecf0f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .category-btn.active {
-            background: var(--secondary);
-            color: white;
-            border-color: var(--secondary);
-            transform: scale(1.05);
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .stat-item {
-            background: var(--light);
-            padding: 15px;
-            border-radius: 10px;
+        .stat-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 15px;
             text-align: center;
+            backdrop-filter: blur(10px);
         }
 
         .stat-number {
-            font-size: 2em;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 1.5em;
+            font-weight: bold;
             display: block;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            color: #7f8c8d;
+            font-size: 0.8em;
+            opacity: 0.8;
         }
 
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 800px;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 30px 20px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #495057;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .nav-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active:hover {
+            background: #2980b9;
+        }
+
+        .content-area {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .metric-card h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .metric-change {
+            font-size: 0.9em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: var(--success);
+            color: white;
+        }
+
+        .metric-change.negative {
+            background: var(--accent);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .chart-container h3 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .conversation-history {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .history-header {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .history-preview {
+            color: #6c757d;
+            font-size: 0.9em;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .sentiment-positive { color: var(--success); }
+        .sentiment-negative { color: var(--accent); }
+        .sentiment-neutral { color: var(--warning); }
+
         .progress-bar {
-            height: 6px;
-            background: var(--light);
-            border-radius: 3px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
             margin: 10px 0;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 3px;
+            border-radius: 4px;
             transition: width 0.3s ease;
         }
 
-        /* Responsividade Avançada */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--secondary);
+            color: white;
+        }
+
         @media (max-width: 1200px) {
-            .dashboard {
+            .main-content {
                 grid-template-columns: 1fr;
-                padding: 25px;
             }
             
-            .transcription-container {
-                grid-column: span 1;
+            .sidebar {
+                display: none;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.2em;
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
             }
             
-            .dashboard {
-                padding: 15px;
-                gap: 15px;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .export-options {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
             
-            .message {
-                margin-left: 10px !important;
-                margin-right: 10px !important;
+            .header-stats {
+                justify-content: center;
             }
-        }
-
-        /* Scrollbar Personalizado */
-        .transcription-box::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .transcription-box::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .transcription-box::-webkit-scrollbar-thumb {
-            background: var(--secondary);
-            border-radius: 4px;
-        }
-
-        /* Loading Skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>IAARG.COM.BR</h1>
-            <div class="subtitle">Assistente de Vendas Inteligente</div>
-            <div class="status">
-                🚀 Sistema Premium Ativo 
-                <span class="version-badge">Fase 2</span>
+            <div class="header-info">
+                <h1><i class="fas fa-chart-line"></i> IAARG Analytics</h1>
+                <p>Dashboard de Performance em Tempo Real</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-badge">
+                    <span class="stat-number" id="totalConversations">0</span>
+                    <span class="stat-label">Conversas</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="stat-number" id="successRate">0%</span>
+                    <span class="stat-label">Taxa de Sucesso</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="stat-number" id="avgDuration">0m</span>
+                    <span class="stat-label">Duração Média</span>
+                </div>
             </div>
         </div>
 
-        <div class="dashboard">
-            <!-- Captura de Áudio -->
-            <div class="card">
-                <h3>🎤 Captura de Áudio</h3>
-                <p>Inicie a escuta da conversa com qualidade premium</p>
-                <button class="btn" id="startListening">
-                    <span>🎯 Iniciar Escuta</span>
-                </button>
-                <button class="btn btn-danger" id="stopListening" disabled>
-                    <span>⏹️ Parar Escuta</span>
-                </button>
-                
-                <div class="progress-bar">
-                    <div class="progress-fill" id="audioLevel" style="width: 0%"></div>
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard Principal</span>
                 </div>
-                
-                <div id="audioStatus" style="margin-top: 10px; font-size: 0.9em; color: #666;"></div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="objectionCount">0</span>
-                        <span class="stat-label">Objeções Detectadas</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="suggestionCount">0</span>
-                        <span class="stat-label">Sugestões Geradas</span>
-                    </div>
+                <div class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Histórico de Vendas</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Análise de Performance</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes & CRM</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
                 </div>
             </div>
 
-            <!-- Configurações IA -->
-            <div class="card">
-                <h3>🤖 IA Persuasiva Avançada</h3>
-                <p>Modo Inteligente com Detecção Premium</p>
-                <button class="btn btn-success" id="toggleAI">
-                    <span>💡 IA Ativada</span>
-                </button>
-                
-                <div class="argument-categories">
-                    <button class="category-btn active" data-category="all">🎯 Todas</button>
-                    <button class="category-btn" data-category="preco">💰 Preço</button>
-                    <button class="category-btn" data-category="necessidade">📊 Necessidade</button>
-                    <button class="category-btn" data-category="urgencia">⏰ Urgência</button>
-                    <button class="category-btn" data-category="confianca">🛡️ Confiança</button>
-                </div>
+            <div class="content-area">
+                <!-- Métricas em Tempo Real -->
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <h3>Objeções Detectadas <span class="metric-change" id="objectionTrend">+12%</span></h3>
+                        <div class="metric-value" id="totalObjections">0</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%; background: var(--accent);" id="objectionProgress"></div>
+                        </div>
+                        <div>Meta: < 5 por conversa</div>
+                    </div>
 
-                <div class="ai-suggestion" id="aiSuggestion" style="display: none;">
-                    <strong>💡 Sugestão IA Premium:</strong> 
-                    <span id="suggestionText">Use argumentos de valor agregado...</span>
-                    <div style="font-size: 0.8em; margin-top: 8px; opacity: 0.8;">
-                        🏷️ Categoria: <span id="suggestionCategory">Geral</span>
+                    <div class="metric-card">
+                        <h3>Taxa de Conversão <span class="metric-change">+8%</span></h3>
+                        <div class="metric-value" id="conversionRate">0%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%; background: var(--success);" id="conversionProgress"></div>
+                        </div>
+                        <div>Meta: > 35%</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Sentimento do Cliente <span class="metric-change">+15%</span></h3>
+                        <div class="metric-value" id="sentimentScore">0%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%; background: var(--info);" id="sentimentProgress"></div>
+                        </div>
+                        <div id="sentimentLabel">Neutro</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <h3>Eficiência da IA <span class="metric-change">+20%</span></h3>
+                        <div class="metric-value" id="aiEfficiency">0%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%; background: var(--warning);" id="efficiencyProgress"></div>
+                        </div>
+                        <div>Relevância das sugestões</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Exportar Dados -->
-            <div class="card">
-                <h3>📊 Exportar Relatórios</h3>
-                <p>Relatórios profissionais com analytics</p>
-                <div class="export-options">
-                    <button class="btn export-btn" id="exportPDF">
-                        <span>📄 PDF Detalhado</span>
-                    </button>
-                    <button class="btn export-btn" id="exportAudio">
-                        <span>🎵 Áudio HD</span>
-                    </button>
-                    <button class="btn export-btn btn-warning" id="exportCSV">
-                        <span>📊 CSV Analytics</span>
-                    </button>
-                    <button class="btn export-btn btn-success" id="exportFull">
-                        <span>💾 Pack Completo</span>
-                    </button>
-                </div>
-            </div>
+                <!-- Gráficos e Analytics -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3><i class="fas fa-chart-bar"></i> Performance por Tipo de Objeção</h3>
+                        <canvas id="objectionChart" height="250"></canvas>
+                    </div>
 
-            <!-- Transcrição em Tempo Real -->
-            <div class="transcription-container">
-                <h3>📝 Transcrição em Tempo Real</h3>
-                <p style="opacity: 0.8; margin-bottom: 15px;">Conversa monitorada com IA avançada</p>
-                
-                <div class="transcription-box" id="transcriptionBox">
-                    <div style="text-align: center; color: #95a5a6; padding: 40px;">
-                        <div style="font-size: 3em; margin-bottom: 10px;">🎤</div>
-                        <div>Aguardando início da conversa...</div>
-                        <small style="opacity: 0.6;">Sistema premium de detecção ativo</small>
+                    <div class="chart-container">
+                        <h3><i class="fas fa-chart-pie"></i> Distribuição de Sentimentos</h3>
+                        <canvas id="sentimentChart" height="250"></canvas>
                     </div>
                 </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <div>
-                        <strong>👤 Cliente</strong> <span class="live-badge" id="clientLive">LIVE</span>
+
+                <!-- Histórico de Conversas -->
+                <div class="conversation-history">
+                    <div class="history-header">
+                        <h3><i class="fas fa-history"></i> Histórico Recente</h3>
+                        <div class="filters">
+                            <button class="filter-btn active">Hoje</button>
+                            <button class="filter-btn">Semana</button>
+                            <button class="filter-btn">Mês</button>
+                        </div>
                     </div>
-                    <div>
-                        <strong>👨‍💼 Vendedor</strong> <span class="live-badge" id="sellerLive">LIVE</span>
+                    <div class="history-list" id="conversationHistory">
+                        <!-- Histórico será populado via JavaScript -->
                     </div>
                 </div>
             </div>
@@ -576,30 +435,191 @@
     </div>
 
     <script>
-        // ====== FASE 2: DESIGN PREMIUM & ANIMAÇÕES ======
-        
-        // (O JavaScript permanece o mesmo da Fase 1, mas com melhorias visuais)
-        // Banco de argumentos, detecção de objeções, etc...
-        
-        // Apenas adicionando algumas animações extras
-        function simulateAudioLevel() {
-            const audioLevel = document.getElementById('audioLevel');
-            setInterval(() => {
-                if (isListening) {
-                    const level = Math.random() * 100;
-                    audioLevel.style.width = level + '%';
-                    audioLevel.style.background = level > 80 ? 
-                        'var(--gradient-warning)' : 'var(--gradient-primary)';
+        // ====== FASE 3: CRM & ANALYTICS ======
+
+        // Dados de exemplo para demonstração
+        const analyticsData = {
+            totalConversations: 47,
+            successRate: 68,
+            avgDuration: 12,
+            objectionsByType: {
+                preco: 15,
+                necessidade: 8,
+                urgencia: 6,
+                confianca: 4
+            },
+            sentimentDistribution: {
+                positive: 25,
+                neutral: 15,
+                negative: 7
+            },
+            conversationHistory: [
+                {
+                    id: 1,
+                    date: '2024-01-15 14:30',
+                    client: 'João Silva',
+                    duration: '15min',
+                    sentiment: 'positive',
+                    preview: 'Cliente interessado na solução Enterprise...',
+                    objections: 2,
+                    success: true
+                },
+                {
+                    id: 2,
+                    date: '2024-01-15 11:15',
+                    client: 'Maria Santos',
+                    duration: '8min',
+                    sentiment: 'neutral',
+                    preview: 'Necessita de mais informações técnicas...',
+                    objections: 3,
+                    success: false
                 }
-            }, 200);
+            ]
+        };
+
+        // Inicializar gráficos
+        function initializeCharts() {
+            // Gráfico de objeções por tipo
+            const objectionCtx = document.getElementById('objectionChart').getContext('2d');
+            new Chart(objectionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Preço', 'Necessidade', 'Urgência', 'Confiança'],
+                    datasets: [{
+                        label: 'Objeções Detectadas',
+                        data: [
+                            analyticsData.objectionsByType.preco,
+                            analyticsData.objectionsByType.necessidade,
+                            analyticsData.objectionsByType.urgencia,
+                            analyticsData.objectionsByType.confianca
+                        ],
+                        backgroundColor: [
+                            '#e74c3c', '#3498db', '#f39c12', '#9b59b6'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Gráfico de pizza de sentimentos
+            const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+            new Chart(sentimentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Positivo', 'Neutro', 'Negativo'],
+                    datasets: [{
+                        data: [
+                            analyticsData.sentimentDistribution.positive,
+                            analyticsData.sentimentDistribution.neutral,
+                            analyticsData.sentimentDistribution.negative
+                        ],
+                        backgroundColor: ['#27ae60', '#f39c12', '#e74c3c'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
         }
 
-        // Inicializar animações
-        simulateAudioLevel();
-        
-        // Restante do código JavaScript da Fase 1 permanece igual
-        // ... (todo o código de funcionalidade anterior)
-        
+        // Atualizar métricas em tempo real
+        function updateRealTimeMetrics() {
+            document.getElementById('totalConversations').textContent = 
+                analyticsData.totalConversations;
+            document.getElementById('successRate').textContent = 
+                analyticsData.successRate + '%';
+            document.getElementById('avgDuration').textContent = 
+                analyticsData.avgDuration + 'm';
+            document.getElementById('totalObjections').textContent = 
+                Object.values(analyticsData.objectionsByType).reduce((a, b) => a + b, 0);
+            
+            // Atualizar progress bars
+            document.getElementById('objectionProgress').style.width = 
+                Math.min(100, (Object.values(analyticsData.objectionsByType).reduce((a, b) => a + b, 0) / 20) * 100) + '%';
+            document.getElementById('conversionProgress').style.width = 
+                analyticsData.successRate + '%';
+            document.getElementById('sentimentProgress').style.width = 
+                ((analyticsData.sentimentDistribution.positive / analyticsData.totalConversations) * 100) + '%';
+            document.getElementById('efficiencyProgress').style.width = '85%';
+        }
+
+        // Popular histórico de conversas
+        function populateConversationHistory() {
+            const historyContainer = document.getElementById('conversationHistory');
+            historyContainer.innerHTML = '';
+
+            analyticsData.conversationHistory.forEach(conv => {
+                const sentimentClass = `sentiment-${conv.sentiment}`;
+                const successIcon = conv.success ? '✅' : '❌';
+
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-date">
+                        ${successIcon} ${conv.date} - ${conv.client}
+                    </div>
+                    <div class="history-preview">${conv.preview}</div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.8em;">
+                        <span>Duração: ${conv.duration}</span>
+                        <span class="${sentimentClass}">Sentimento: ${conv.sentiment}</span>
+                        <span>Objeções: ${conv.objections}</span>
+                    </div>
+                `;
+                historyContainer.appendChild(historyItem);
+            });
+        }
+
+        // Simular atualizações em tempo real
+        function simulateRealTimeUpdates() {
+            setInterval(() => {
+                // Simular nova conversa
+                analyticsData.totalConversations++;
+                analyticsData.successRate = Math.min(100, 
+                    analyticsData.successRate + (Math.random() > 0.5 ? 1 : -1));
+                
+                updateRealTimeMetrics();
+            }, 5000);
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateRealTimeMetrics();
+            populateConversationHistory();
+            simulateRealTimeUpdates();
+
+            // Navegação da sidebar
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Filtros do histórico
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+
+        console.log('🚀 IAARG Analytics - Fase 3 CRM Carregado!');
     </script>
 </body>
 </html>
