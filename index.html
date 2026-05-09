@@ -49,7 +49,7 @@
         </div>
     </div>
     <script>
-        const socket = new WebSocket(`wss://${window.location.host.replace("8080", "8765")}`);
+        const socket = new WebSocket(`wss://${window.location.host.replace("8080", "8765")}/ws`);
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'pt-BR'; recognition.continuous = true; recognition.interimResults = true;
 
