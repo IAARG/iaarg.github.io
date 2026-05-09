@@ -1,1 +1,1 @@
-{ "name": "Argus Command", "short_name": "Argus", "start_url": "/", "display": "standalone", "background_color": "#0a0a0a", "theme_color": "#00d1ff", "icons": [ { "src": "public/icon-192.png", "sizes": "192x192", "type": "image/png" } ] }
+{"name":"Argus Command","short_name":"Argus","start_url":"/","display":"standalone","background_color":"#0a0a0a","theme_color":"#00d1ff","icons":[{"src":"public/.gitkeep","sizes":"192x192","type":"image/png"}]}
