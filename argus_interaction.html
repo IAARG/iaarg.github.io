@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARGUS AI - Interação Dinâmica</title>
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        @keyframes sprout {
+            0% { transform: scale(0.3) translateY(50px); opacity: 0; filter: brightness(2); }
+            60% { transform: scale(1.05) translateY(-5px); opacity: 1; filter: brightness(1.2); }
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: brightness(1); }
+        }
+        .animate-sprout { animation: sprout 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .glow-border { box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); border: 1px solid rgba(34, 211, 238, 0.6); }
+        body { background-color: #0d1117; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen text-white p-6">
+
+    <!-- Simulador da sua Dashboard -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl">
+        
+        <!-- Contexto (Estatico) -->
+        <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 opacity-50">
+            <h2 class="text-purple-400 font-bold mb-4">👥 Contexto da Reunião</h2>
+            <p class="text-sm text-gray-400">Duração: 05:27</p>
+        </div>
+
+        <!-- Insights (Estatico) -->
+        <div class="bg-gray-900/50 p-6 rounded-2xl border border-gray-800 opacity-50">
+            <h2 class="text-yellow-400 font-bold mb-4">💡 Insights em Tempo Real</h2>
+            <p class="text-sm text-gray-400">Probabilidade: 45%</p>
+        </div>
+
+        <!-- ONDE A MÁGICA ACONTECE: Sugestões do ARGUS -->
+        <div id="argus-container" class="bg-[#161b22] p-6 rounded-2xl border border-gray-800 flex flex-col justify-between h-64 relative overflow-hidden">
+            <h2 class="text-pink-500 font-bold mb-2 flex items-center">
+                🚀 Sugestões do ARGUS
+            </h2>
+            
+            <!-- Card que "Brota" -->
+            <div id="suggestion-card" class="hidden glow-border bg-cyan-950/20 p-4 rounded-xl animate-sprout">
+                <p class="text-cyan-400 font-bold text-xs uppercase mb-1">📍 Sugestão Atual:</p>
+                <p id="suggestion-text" class="text-sm leading-relaxed">
+                    Aguardando gatilho de fala...
+                </p>
+            </div>
+
+            <div class="flex justify-between mt-4 text-center border-t border-gray-800 pt-4">
+                <div><p class="text-xl font-bold">3</p><p class="text-[10px] text-gray-500">Objeções</p></div>
+                <div><p id="sugg-count" class="text-xl font-bold">7</p><p class="text-[10px] text-gray-500">Sugestões</p></div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="triggerSuggestion()" class="mt-12 bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-full transition-all active:scale-95 shadow-lg shadow-cyan-500/20">
+        Simular Objeção do Cliente
+    </button>
+
+    <script>
+        let count = 7;
+        const suggestions = [
+            "O cliente citou preço. Aplique a técnica de ancoragem: 'O investimento mensal é menor que o custo de uma hora de consultoria'.",
+            "Objeção de tempo detectada. Use: 'Nossa implementação leva apenas 24h e não exige esforço da sua equipe técnica'.",
+            "Falta de autoridade percebida. Mencione: 'Já ajudamos mais de 50 empresas do seu setor a reduzir o churn em 20%'."
+        ];
+
+        function triggerSuggestion() {
+            const card = document.getElementById('suggestion-card');
+            const text = document.getElementById('suggestion-text');
+            const counter = document.getElementById('sugg-count');
+            
+            // Reset da animação
+            card.classList.remove('hidden', 'animate-sprout');
+            void card.offsetWidth; // Trigger reflow
+            
+            // Atualiza conteúdo
+            text.innerText = suggestions[Math.floor(Math.random() * suggestions.length)];
+            count++;
+            counter.innerText = count;
+            
+            // Inicia animação
+            card.classList.add('animate-sprout');
+        }
+    </script>
+</body>
+</html>

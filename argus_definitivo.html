@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ARGUS AI - Assistente de Vendas Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* Container principal */
+        .app {
+            max-width: 500px;
+            margin: 0 auto;
+            background: radial-gradient(circle at 100% 0%, #1a1f3a 0%, #0a0e27 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            padding: 24px 20px 16px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(0,212,255,0.1) 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: rgba(0,212,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #00d4ff;
+        }
+
+        /* Microfone principal */
+        .mic-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .mic-circle {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(255,71,87,0.4);
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .mic-circle.active {
+            background: linear-gradient(135deg, #2ed573, #00d4ff);
+            box-shadow: 0 0 40px rgba(46,213,115,0.6);
+            animation: vibrar 1.5s infinite;
+        }
+
+        @keyframes vibrar {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .mic-circle span {
+            font-size: 48px;
+        }
+
+        .mic-text {
+            margin-top: 12px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Cards de métricas */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 0 20px 20px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 14px 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+        }
+
+        /* Área de conversa */
+        .chat-area {
+            background: rgba(0,0,0,0.3);
+            margin: 0 16px 16px;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+            color: #00d4ff;
+        }
+
+        .messages {
+            height: 380px;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Bubbles de mensagem */
+        .message {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.client {
+            justify-content: flex-start;
+        }
+
+        .message.argus {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.client .bubble {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px 20px 20px 5px;
+        }
+
+        .message.argus .bubble {
+            background: linear-gradient(135deg, #1a1f3a, #2a2f4a);
+            color: white;
+            border-radius: 20px 20px 5px 20px;
+            border: 1px solid rgba(0,212,255,0.3);
+        }
+
+        .message-name {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .message-time {
+            font-size: 9px;
+            opacity: 0.5;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Indicador de digitação */
+        .typing {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            width: fit-content;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: #00d4ff;
+            border-radius: 50%;
+            animation: typingAnim 1.4s infinite;
+        }
+
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnim {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* Ao vivo */
+        .live-transcript {
+            margin: 16px;
+            padding: 12px 16px;
+            background: rgba(0,212,255,0.1);
+            border-radius: 16px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .live-label {
+            font-size: 10px;
+            color: #00d4ff;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .live-text {
+            font-size: 14px;
+            color: white;
+        }
+
+        /* Sugestões */
+        .suggestions-panel {
+            margin: 0 16px 16px;
+        }
+
+        .suggestions-title {
+            font-size: 14px;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-card {
+            background: rgba(0,212,255,0.1);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 8px;
+            border-left: 3px solid #00d4ff;
+            font-size: 13px;
+            color: white;
+            line-height: 1.4;
+        }
+
+        /* Objeções */
+        .objections-list {
+            margin: 0 16px 16px;
+        }
+
+        .objection-item {
+            background: rgba(255,71,87,0.15);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-left: 3px solid #ff4757;
+            font-size: 12px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Botões de teste */
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 0 16px 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .test-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .test-btn:active {
+            background: #667eea;
+            transform: scale(0.95);
+        }
+
+        /* Status bar */
+        .status-bar {
+            background: rgba(0,0,0,0.5);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="header">
+            <div class="logo">
+                <h1>ARGUS <span style="color:#00d4ff;">AI</span></h1>
+                <div class="badge">🎤 Viva Voz</div>
+            </div>
+        </div>
+
+        <div class="mic-main">
+            <div class="mic-circle" id="micBtn" onclick="toggleMic()">
+                <span>🎤</span>
+            </div>
+            <div class="mic-text" id="micStatus">Clique para ativar</div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value" id="probValue">45%</div>
+                <div class="metric-label">Fechamento</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="toneEmoji">😐</div>
+                <div class="metric-label" id="toneLabel">Neutro</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="objCount">0</div>
+                <div class="metric-label">Objeções</div>
+            </div>
+        </div>
+
+        <div class="chat-area">
+            <div class="chat-header">
+                💬 Conversa com o Cliente
+            </div>
+            <div class="messages" id="messages">
+                <div class="message argus">
+                    <div class="bubble">
+                        <div class="message-name">🤖 ARGUS AI</div>
+                        Olá! Clique no microfone e comece a conversar. Vou analisar e sugerir os melhores argumentos!
+                        <div class="message-time">Agora</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="live-transcript">
+            <div class="live-label">🎙️ ESCUTANDO AGORA</div>
+            <div class="live-text" id="liveText">Aguardando fala do cliente...</div>
+        </div>
+
+        <div class="suggestions-panel">
+            <div class="suggestions-title">💡 ARGUS SUGERE</div>
+            <div id="suggestionsList">
+                <div class="suggestion-card">🎤 Ative o microfone e comece a conversar</div>
+                <div class="suggestion-card">👂 O ARGUS escuta e gera argumentos automaticamente</div>
+            </div>
+        </div>
+
+        <div class="objections-list" id="objectionsList">
+            <div style="text-align: center; color: rgba(255,255,255,0.4); font-size: 12px;">Nenhuma objeção</div>
+        </div>
+
+        <div class="test-buttons">
+            <button class="test-btn" onclick="testPhrase('Está muito caro')">💰 "Está caro"</button>
+            <button class="test-btn" onclick="testPhrase('Gostei do produto')">😊 "Gostei"</button>
+            <button class="test-btn" onclick="testPhrase('Preciso pensar')">🤔 "Vou pensar"</button>
+            <button class="test-btn" onclick="testPhrase('Concorrente é melhor')">⚔️ "Concorrente"</button>
+        </div>
+
+        <div class="status-bar">
+            <span>⏱️ <span id="duration">00:00</span></span>
+            <span>🎯 IA em tempo real</span>
+            <span>⚡ 100% Grátis</span>
+        </div>
+    </div>
+
+    <script>
+        let recognition = null;
+        let isListening = false;
+        let probability = 45;
+        let objectionsTotal = 0;
+        let minutes = 0;
+        let conversationHistory = [];
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        function initSpeech() {
+            if (!SpeechRecognition) {
+                alert('⚠️ Use Chrome, Edge ou Safari para reconhecimento de voz');
+                return false;
+            }
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.lang = 'pt-BR';
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('micBtn').classList.add('active');
+                document.getElementById('micStatus').innerHTML = '🔴 Ouvindo... Fale com o cliente';
+                updateLiveText('🎤 Microfone ativo! Fale agora.');
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                document.getElementById('micBtn').classList.remove('active');
+                document.getElementById('micStatus').innerHTML = 'Clique para ativar';
+            };
+
+            recognition.onresult = (event) => {
+                let finalText = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        finalText += event.results[i][0].transcript;
+                    }
+                }
+                if (finalText) {
+                    updateLiveText(`"${finalText}"`);
+                    processClientMessage(finalText);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Erro:', event.error);
+                updateLiveText(`Erro: ${event.error}. Tente novamente.`);
+            };
+
+            return true;
+        }
+
+        function toggleMic() {
+            if (!recognition) {
+                if (!initSpeech()) return;
+            }
+            if (isListening) {
+                recognition.stop();
+                updateLiveText('Microfone desligado. Clique para ativar.');
+            } else {
+                recognition.start();
+            }
+        }
+
+        function testPhrase(phrase) {
+            updateLiveText(`"${phrase}" (teste)`);
+            processClientMessage(phrase);
+        }
+
+        function updateLiveText(text) {
+            document.getElementById('liveText').innerHTML = text;
+        }
+
+        function processClientMessage(text) {
+            addMessage('client', text);
+            conversationHistory.push({type: 'client', text: text});
+
+            showTypingIndicator();
+
+            setTimeout(() => {
+                const analysis = generateArguments(text);
+                addMessage('argus', analysis.suggestion);
+                conversationHistory.push({type: 'argus', text: analysis.suggestion});
+                updateMetricsAndSuggestions(analysis);
+                hideTypingIndicator();
+            }, 700);
+        }
+
+        function generateArguments(message) {
+            const lower = message.toLowerCase();
+            
+            const responses = {
+                price: {
+                    keywords: ['caro', 'preço', 'orçamento', 'dinheiro', 'custa', 'valor alto'],
+                    tone: 'negativo',
+                    emoji: '😟',
+                    toneText: 'Negativo',
+                    suggestion: '💰 "Entendo sua preocupação com o investimento. Vamos calcular juntos o ROI? Em poucos meses o retorno vem. Posso mostrar os números do seu caso?"',
+                    probChange: -10,
+                    objection: {type: 'PREÇO', text: 'Cliente questionou o valor'}
+                },
+                positive: {
+                    keywords: ['gostei', 'quero', 'comprar', 'ótimo', 'excelente', 'bom', 'legal'],
+                    tone: 'positivo',
+                    emoji: '😊',
+                    toneText: 'Positivo',
+                    suggestion: '🎯 "Que bom saber disso! Vamos aproveitar o momento. Posso já preparar a proposta comercial para enviarmos hoje mesmo? Qual o melhor horário?"',
+                    probChange: 15,
+                    objection: null
+                },
+                delay: {
+                    keywords: ['pensar', 'depois', 'preciso ver', 'analisar', 'avaliar', 'decidir'],
+                    tone: 'neutro',
+                    emoji: '🤔',
+                    toneText: 'Neutro',
+                    suggestion: '📅 "Perfeito, é sempre bom analisar com calma. Posso te enviar um case de sucesso de um cliente similar? Conversamos em 48 horas?"',
+                    probChange: -5,
+                    objection: {type: 'TIMING', text: 'Cliente quer mais tempo'}
+                },
+                competitor: {
+                    keywords: ['concorrente', 'outro', 'melhor', 'comparar', 'alternativa'],
+                    tone: 'interessado',
+                    emoji: '🤔',
+                    toneText: 'Interessado',
+                    suggestion: '⚡ "Ótima observação! Nossos diferenciais são [benefícios exclusivos]. Posso listar 3 vantagens que só a gente oferece?"',
+                    probChange: 0,
+                    objection: {type: 'CONCORRÊNCIA', text: 'Comparando com concorrente'}
+                },
+                technical: {
+                    keywords: ['funciona', 'como', 'integração', 'suporte', 'instalar'],
+                    tone: 'neutro',
+                    emoji: '😐',
+                    toneText: 'Neutro',
+                    suggestion: '📞 "Ótima pergunta! O melhor é te mostrar na prática. Posso agendar uma demonstração personalizada de 15 minutos?"',
+                    probChange: 5,
+                    objection: null
+                }
+            };
+
+            for (const [key, data] of Object.entries(responses)) {
+                if (data.keywords.some(kw => lower.includes(kw))) {
+                    return {
+                        tone: data.tone,
+                        emoji: data.emoji,
+                        toneText: data.toneText,
+                        suggestion: data.suggestion,
+                        probChange: data.probChange,
+                        objection: data.objection
+                    };
+                }
+            }
+
+            return {
+                tone: 'neutro',
+                emoji: '😐',
+                toneText: 'Neutro',
+                suggestion: '👂 "Para te ajudar melhor, qual o principal desafio que você quer resolver com essa solução?"',
+                probChange: 0,
+                objection: null
+            };
+        }
+
+        function addMessage(type, text) {
+            const container = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+            
+            if (type === 'client') {
+                messageDiv.innerHTML = `
+                    <div class="bubble">
+                        <div class="message-name">👤 CLIENTE</div>
+                        ${text}
+                        <div class="message-time">${timeStr}</div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="bubble">
+                        <div class="message-name">🤖 ARGUS AI</div>
+                        ${text}
+                        <div class="message-time">${timeStr}</div>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message argus';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing">
+                    <span></span><span></span><span></span>
+                    <span style="color:rgba(255,255,255,0.6); margin-left:8px;">ARGUS pensando...</span>
+                </div>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function updateMetricsAndSuggestions(analysis) {
+            // Atualizar tom
+            document.getElementById('toneEmoji').innerHTML = analysis.emoji;
+            document.getElementById('toneLabel').innerHTML = analysis.toneText;
+
+            // Atualizar probabilidade
+            probability += analysis.probChange;
+            probability = Math.max(0, Math.min(100, probability));
+            document.getElementById('probValue').innerHTML = Math.round(probability) + '%';
+
+            // Atualizar objeções
+            if (analysis.objection) {
+                objectionsTotal++;
+                document.getElementById('objCount').innerHTML = objectionsTotal;
+                
+                const objectionsDiv = document.getElementById('objectionsList');
+                if (objectionsDiv.querySelector('div[style*="text-align"]')) {
+                    objectionsDiv.innerHTML = '';
+                }
+                const objItem = document.createElement('div');
+                objItem.className = 'objection-item';
+                objItem.innerHTML = `<strong>⚠️ ${analysis.objection.type}</strong><br>${analysis.objection.text}`;
+                objectionsDiv.prepend(objItem);
+            }
+
+            // Atualizar sugestões
+            const suggestionsDiv = document.getElementById('suggestionsList');
+            suggestionsDiv.innerHTML = `
+                <div class="suggestion-card">💡 ${analysis.suggestion}</div>
+                <div class="suggestion-card">🎯 Foque no valor que a solução entrega para o cliente</div>
+                <div class="suggestion-card">📊 Faça perguntas abertas para entender melhor as dores</div>
+            `;
+        }
+
+        // Contador de duração
+        setInterval(() => {
+            if (isListening || conversationHistory.length > 1) {
+                minutes++;
+                const mins = minutes % 60;
+                const hours = Math.floor(minutes / 60);
+                document.getElementById('duration').innerHTML = `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}`;
+            }
+        }, 60000);
+
+        // Inicializar
+        window.onload = () => {
+            initSpeech();
+            console.log('🚀 ARGUS AI pronto! Clique no microfone.');
+        };
+    </script>
+</body>
+</html>

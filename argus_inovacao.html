@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(34, 211, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+        }
+        .ai-glow { animation: pulse-border 2s infinite; border: 1px solid #22d3ee; }
+        .typing-cursor::after { content: "|"; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-sm bg-[#0d1117] rounded-3xl p-6 border border-gray-800 relative overflow-hidden">
+        <!-- Badge de Status -->
+        <div class="flex items-center space-x-2 mb-6">
+            <div class="w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_10px_#22d3ee]"></div>
+            <span class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Argus Engine v2.0</span>
+        </div>
+
+        <h2 class="text-pink-500 font-bold text-lg mb-4 flex items-center">
+            <span class="mr-2">🚀</span> Sugestão Estratégica
+        </h2>
+
+        <!-- Card Interativo -->
+        <div id="target-card" class="bg-black/40 p-5 rounded-2xl transition-all duration-500 min-h-[120px]">
+            <p id="ai-text" class="text-gray-300 text-sm leading-relaxed italic">
+                Ouvindo conversação...
+            </p>
+        </div>
+
+        <div class="mt-6 flex justify-between items-end">
+            <div class="text-left">
+                <p class="text-[10px] text-gray-500 uppercase">Objeções</p>
+                <p class="text-2xl font-black text-white">03</p>
+            </div>
+            <div class="h-10 w-10 bg-cyan-500/10 rounded-full flex items-center justify-center border border-cyan-500/20">
+                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="simulateInsight()" class="mt-10 px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-cyan-400 transition-all">
+        SIMULAR INSIGHT DE IA
+    </button>
+
+    <script>
+        const insights = [
+            "DETECÇÃO: Hesitação em preço. Fale sobre o custo de oportunidade de 15k/mês caso não fechem agora.",
+            "ALERTA: Tom de voz do cliente mudou para 'Curioso'. É o momento de oferecer o bônus de onboarding.",
+            "TÁTICA: O cliente citou a concorrência. Foque na nossa integração nativa que eles não possuem."
+        ];
+
+        function simulateInsight() {
+            const card = document.getElementById('target-card');
+            const textEl = document.getElementById('ai-text');
+            const newText = insights[Math.floor(Math.random() * insights.length)];
+            
+            // Estética de ativação
+            card.classList.add('ai-glow');
+            textEl.innerHTML = "";
+            textEl.classList.add('typing-cursor');
+
+            // Efeito de Digitação (Ghost Writer)
+            let i = 0;
+            function type() {
+                if (i < newText.length) {
+                    textEl.innerHTML += newText.charAt(i);
+                    i++;
+                    setTimeout(type, 30);
+                } else {
+                    textEl.classList.remove('typing-cursor');
+                    setTimeout(() => card.classList.remove('ai-glow'), 3000);
+                }
+            }
+            type();
+        }
+    </script>
+</body>
+</html>
